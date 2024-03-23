@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 9ef989cd72a51924091bf8d014770f42
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - particle: {instanceID: 0}
+  - cam: {instanceID: 0}
+  - ammoText: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
