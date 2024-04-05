@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviourPunCallbacks
 {
     [SerializeField] float shiftSpeed = 10f;
     [SerializeField] float jumpForce = 7f;
@@ -41,6 +42,14 @@ public class PlayerController : MonoBehaviour
         currentSpeed = movementSpeed;
         anim = GetComponent<Animator>();
         health = 100;
+        // Se un personaggio non appartiene al giocatore, allora
+        if (!photonView.IsMine)
+        {
+            // Individuazione della telecamera nella Gerarchia del giocatore e sua disabilitazione
+            transform.Find("Main Camera").gameObject.SetActive(false);
+            // Disabilitare lo script PlayerController
+            this.enabled = false;
+        }
     }
 
     // Update is called once per frame

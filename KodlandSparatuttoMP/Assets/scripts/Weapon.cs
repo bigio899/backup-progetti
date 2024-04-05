@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Photon.Pun;
 
-public class Weapon : MonoBehaviour
+public class Weapon : MonoBehaviourPunCallbacks
 {
     //Il sistema a particelle che lascerà i buchi dei proiettili
     [SerializeField] protected GameObject particle;
@@ -33,23 +34,26 @@ public class Weapon : MonoBehaviour
     }
     private void Update()
     {
-        //Avviare il timer
-        timer += Time.deltaTime;
-        //Se il giocatore sta premendo il tasto sinistro, chiamiamo la funzione Shoot per sparare
-        if (Input.GetMouseButton(0))
+        if(PhotonView.IsMine)
         {
-            Shoot();
-        }
-
-        //se il giocatore preme il tasto R
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            //se il caricatore non è pieno, OPPURE se abbiamo almeno una munizione nelle riserve, allora
-            if (ammoCurrent != ammoMax || ammoBackPack != 0)
+            //Avviare il timer
+            timer += Time.deltaTime;
+            //Se il giocatore sta premendo il tasto sinistro, chiamiamo la funzione Shoot per sparare
+            if (Input.GetMouseButton(0))
             {
-                //attiva la funzione di ricarica con un leggero ritardo
-                //puoi impostare il ritardo a qualunque valore preferisci
-                Invoke("Reload", 1);
+                Shoot();
+            }
+
+            //se il giocatore preme il tasto R
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                //se il caricatore non è pieno, OPPURE se abbiamo almeno una munizione nelle riserve, allora
+                if (ammoCurrent != ammoMax || ammoBackPack != 0)
+                {
+                    //attiva la funzione di ricarica con un leggero ritardo
+                    //puoi impostare il ritardo a qualunque valore preferisci
+                    Invoke("Reload", 1);
+                }
             }
         }
     }
