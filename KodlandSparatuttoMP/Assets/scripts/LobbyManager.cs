@@ -12,6 +12,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] TMP_InputField InputText;
     [SerializeField] TMP_Text PlayersText;
     [SerializeField] GameObject startButton;
+    [SerializeField] TMP_InputField inputField;
 
     // Start is called before the first frame update
     void Start()
@@ -93,10 +94,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         foreach (Photon.Realtime.Player otherPlayer in PhotonNetwork.PlayerList)
         {
             // Passaggio alla nuova linea
-            PlayersText.text += "\n";
-    
+            PlayersText.text += "\n";
+
             // Emissione del soprannome del giocatore
-        PlayersText.text += otherPlayer.NickName;
+            PlayersText.text += otherPlayer.NickName;
         }
     }
 
@@ -105,7 +106,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         // La chiamata può essere effettuata solo dal Master Client (il giocatore che ha creato il server).
         if (PhotonNetwork.IsMasterClient)
         {
-        // Richiamo del metodo ShowPlayers per tutti i giocatori della Lobby
+        //Richiamo del metodo ShowPlayers per tutti i giocatori della Lobby
             photonView.RPC("ShowPlayers", RpcTarget.All);
         }
     }
@@ -114,4 +115,5 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.LoadLevel("Game");
     }
+
 }

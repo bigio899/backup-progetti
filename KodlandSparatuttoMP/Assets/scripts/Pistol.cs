@@ -25,7 +25,6 @@ public class Pistol : Weapon
             if (hit.collider.CompareTag("enemy"))
             {
                 // È possibile modificare il numero 10 in qualsiasi altro numero. È la quantità di danni causati da 1 proiettile.
-                hit.collider.gameObject.GetComponent<Enemy>().ChangeHealth(8);
             }
             Destroy(gameBullet, 1);
         }

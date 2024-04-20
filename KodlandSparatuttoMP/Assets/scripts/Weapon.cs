@@ -34,7 +34,7 @@ public class Weapon : MonoBehaviourPunCallbacks
     }
     private void Update()
     {
-        if(PhotonView.IsMine)
+        if(photonView.IsMine)
         {
             //Avviare il timer
             timer += Time.deltaTime;

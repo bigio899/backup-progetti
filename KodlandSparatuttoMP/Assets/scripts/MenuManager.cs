@@ -8,6 +8,8 @@ using Photon.Pun;
 public class MenuManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] Text logText;
+    [SerializeField] TMP_InputField inputField;
+
     void Log(string message)
     {
         // Spostamento del testo alla riga successiva
@@ -52,5 +54,13 @@ public class MenuManager : MonoBehaviourPunCallbacks
     {
         Log("Sono entrati nella lobby");
         PhotonNetwork.LoadLevel("Lobby");
+    }
+
+    public void ChangeName()
+    {
+        //Lettura del testo digitato dal giocatore nell'InputField
+        PhotonNetwork.NickName = inputField.text;
+        //Emissione del nuovo nickname
+        Log("New Player name: " + PhotonNetwork.NickName);
     }
 }

@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] AudioSource characterSounds;
     // Un riferimento al clip audio di salto
     [SerializeField] AudioClip jump;
+    TextUpdate textUpdate;
     public enum Weapons
     {
         None,
@@ -34,10 +35,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
         MiniGun
     }
     Weapons weapons = Weapons.None;
+    public bool dead;
 
     // Start is called before the first frame update
     void Start()
     {
+        textUpdate = GetComponent<TextUpdate>();
         rb = GetComponent<Rigidbody>();
         currentSpeed = movementSpeed;
         anim = GetComponent<Animator>();
@@ -47,6 +50,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         {
             // Individuazione della telecamera nella Gerarchia del giocatore e sua disabilitazione
             transform.Find("Main Camera").gameObject.SetActive(false);
+            transform.Find("Canvas").gameObject.SetActive(false);
             // Disabilitare lo script PlayerController
             this.enabled = false;
         }
@@ -115,19 +119,23 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         if (Input.GetKeyDown(KeyCode.Alpha1) && isPistol)
         {
+            photonView.RPC("ChooseWeapon", RpcTarget.All, Weapons.Pistol);
             ChooseWeapon(Weapons.Pistol);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2) && isRifle)
         {
             ChooseWeapon(Weapons.Rifle);
+            photonView.RPC("ChooseWeapon", RpcTarget.All, Weapons.Rifle);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3) && isMiniGun)
         {
             ChooseWeapon(Weapons.MiniGun);
+            photonView.RPC("ChooseWeapon", RpcTarget.All, Weapons.MiniGun);
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             ChooseWeapon(Weapons.None);
+            photonView.RPC("ChooseWeapon", RpcTarget.All, Weapons.None);
         }
 
     }
@@ -147,6 +155,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         anim.SetBool("Jump", false);
     }
 
+    [PunRPC]
     public void ChooseWeapon(Weapons weapons)
     {
         anim.SetBool("Pistol", weapons == Weapons.Pistol);
@@ -200,13 +209,16 @@ public class PlayerController : MonoBehaviourPunCallbacks
         Destroy(other.gameObject);
     }
 
+    [PunRPC]
     public void ChangeHealth(int count)
     {
         // sottrazione della salute
         health -= count;
+        textUpdate.SetHealth(health);
         // se la salute è pari o inferiore a zero, allora...
         if (health <= 0)
         {
+            dead = true;
             //qualcosa sta per accadere
             //Attivazione dell'animazione di morte
             anim.SetBool("Die", true);
@@ -215,5 +227,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
             //La disattivazione dello script PlayerController rende il giocatore incapace di muoversi
             this.enabled = false;
         }
+    }
+
+    public void GetDamage(int count)
+    {
+        photonView.RPC("ChangeHealth", RpcTarget.All, count);
     }
 }
